@@ -188,14 +188,6 @@ flash: 	all
 	$(Print) BURNING $(TARGET:.axf=.bin) to target
 	$(PROGRAMER_PATH)/STM32_Programmer.sh -c port=SWD -w $(TARGET:.axf=.bin) $(BOOT_START_ADDR_VAL) -rst
 
-.PHONY: factory
-factory:
-ifdef dev
-	ak-flash $(dev) ../resources/bin/ak-base-kit-stm32l151-boot.bin $(BOOT_START_ADDR_VAL)
-else
-	$(PROGRAMER_PATH)/STM32_Programmer.sh -c port=SWD -w ../resources/bin/ak-base-kit-stm32l151-boot.bin $(BOOT_START_ADDR_VAL) -rst
-endif
-
 debug:	all
 	xterm -e openocd -f $(OPENOCD_PATH)/tcl/board/stm32ldiscovery.cfg &
 ifeq ($(gdb),ddd)

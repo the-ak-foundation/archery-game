@@ -126,7 +126,7 @@ void scr_game_setting_handle(ak_msg_t* msg) {
 		case SETTING_ITEM_ARRDESS_1: {
 			// Change arrow number
 			settingdata.num_arrow++;
-			if (settingdata.num_arrow > 5) {
+			if (settingdata.num_arrow > MAX_NUM_ARROW) {
 				settingdata.num_arrow = 1;
 			}
 		}
@@ -166,7 +166,7 @@ void scr_game_setting_handle(ak_msg_t* msg) {
 	case AC_DISPLAY_BUTTON_UP_LONG_PRESSED: {
 		APP_DBG_SIG("AC_DISPLAY_BUTTON_UP_LONG_PRESSED\n");
 		// Change data max
-		settingdata.num_arrow = 5;
+		settingdata.num_arrow = MAX_NUM_ARROW;
 		settingdata.meteoroid_speed = 5;
 		settingdata.silent = 0;
 	}

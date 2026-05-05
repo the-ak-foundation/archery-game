@@ -43,13 +43,11 @@ typedef struct {
 extern "C" {
 #endif
 
-void ar_game_score_set_default(ar_game_score_t* data);
-void ar_game_score_read(ar_game_score_t* data);
-void ar_game_score_write(ar_game_score_t* data);
+extern bool ar_game_score_read(ar_game_score_t* data);
+extern bool ar_game_score_write(ar_game_score_t* data);
 
-void ar_game_setting_set_default(ar_game_setting_t* data);
-void ar_game_setting_read(ar_game_setting_t* data);
-void ar_game_setting_write(ar_game_setting_t* data);
+extern bool ar_game_setting_read(ar_game_setting_t* data);
+extern bool ar_game_setting_write(ar_game_setting_t* data);
 
 #ifdef __cplusplus
 }

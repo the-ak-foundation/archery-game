@@ -784,9 +784,9 @@ Cơ chế sử dụng `Magic number` kết hợp với `Checksum` giúp đảm b
 
 **Code:**
 ```cpp
-void ar_game_score_read(ar_game_score_t* data);
-void ar_game_score_write(ar_game_score_t* data);
+extern bool ar_game_score_read(ar_game_score_t* data);
+extern bool ar_game_score_write(ar_game_score_t* data);
 
-void ar_game_setting_read(ar_game_setting_t* data);
-void ar_game_setting_write(ar_game_setting_t* data);
+extern bool ar_game_setting_read(ar_game_setting_t* data);
+extern bool ar_game_setting_write(ar_game_setting_t* data);
 ```

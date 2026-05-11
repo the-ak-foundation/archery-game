@@ -152,6 +152,14 @@ void Adafruit_oled_drv::display_off() {
 #endif
 }
 
+const unsigned char* Adafruit_oled_drv::getFrameBuffer() const {
+	return m_pFramebuffer;
+}
+
+unsigned int Adafruit_oled_drv::getFrameBufferSize() const {
+	return FBSIZE;
+}
+
 void Adafruit_oled_drv::writeCommand(unsigned char cmd) {
 	startIIC();
 	writeByte(0x78);	// Slave address,SA0=0

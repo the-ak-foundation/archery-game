@@ -1,0 +1,127 @@
+#!/usr/bin/env python3
+"""Small image utility CLI for this repository.
+
+Example:
+    resources/images/tools/py3 -t zoom -v 4 -i resources/images/screens/download.png
+    resources/images/tools/py3 -t zoom -v 4 -i resources/images/screens/download.png -o resources/images/screens/download_x4.png
+"""
+
+from __future__ import annotations
+
+import argparse
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+
+def build_output_path(input_path: Path, scale: int) -> Path:
+    return input_path.with_name(f"{input_path.stem}_x{scale}{input_path.suffix}")
+
+
+def resize_with_pillow(input_path: Path, output_path: Path, scale: int) -> bool:
+    try:
+        from PIL import Image, ImageSequence
+    except ImportError:
+        return False
+
+    nearest = getattr(getattr(Image, "Resampling", Image), "NEAREST")
+
+    with Image.open(input_path) as image:
+        width, height = image.size
+        resized_size = (width * scale, height * scale)
+
+        if getattr(image, "is_animated", False):
+            frames = []
+            durations = []
+
+            for frame in ImageSequence.Iterator(image):
+                frame_copy = frame.copy()
+                resized = frame_copy.resize(resized_size, nearest)
+                frames.append(resized)
+                durations.append(frame.info.get("duration", image.info.get("duration", 100)))
+
+            if not frames:
+                raise RuntimeError(f"No frames found in animated image: {input_path}")
+
+            frames[0].save(
+                output_path,
+                save_all=True,
+                append_images=frames[1:],
+                duration=durations,
+                loop=image.info.get("loop", 0),
+            )
+            return True
+
+        image.resize(resized_size, nearest).save(output_path)
+        return True
+
+
+def resize_with_imagemagick(input_path: Path, output_path: Path, scale: int) -> bool:
+    convert = shutil.which("convert")
+    if convert is None:
+        return False
+
+    resize_value = f"{scale * 100}%"
+    subprocess.run(
+        [
+            convert,
+            str(input_path),
+            "-filter",
+            "point",
+            "-resize",
+            resize_value,
+            str(output_path),
+        ],
+        check=True,
+    )
+    return True
+
+
+def zoom_image(input_path: Path, output_path: Path, scale: int) -> None:
+    if scale <= 0:
+        raise ValueError("Scale value must be greater than 0")
+
+    if not input_path.exists():
+        raise FileNotFoundError(f"Input file does not exist: {input_path}")
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    if resize_with_pillow(input_path, output_path, scale):
+        return
+
+    if resize_with_imagemagick(input_path, output_path, scale):
+        return
+
+    raise RuntimeError("Cannot resize image. Install Pillow or ImageMagick.")
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Repository image helper")
+    parser.add_argument("-t", "--task", required=True, choices=["zoom"], help="Task to run")
+    parser.add_argument("-v", "--value", required=True, type=int, help="Scale value, e.g. 4")
+    parser.add_argument("-i", "--input", required=True, type=Path, help="Input image path")
+    parser.add_argument("-o", "--output", type=Path, help="Output image path")
+    return parser.parse_args()
+
+
+def main() -> int:
+    args = parse_args()
+    input_path = args.input
+    output_path = args.output or build_output_path(input_path, args.value)
+
+    try:
+        if args.task == "zoom":
+            zoom_image(input_path, output_path, args.value)
+        else:
+            raise ValueError(f"Unsupported task: {args.task}")
+    except Exception as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
+
+    print(f"created: {output_path}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

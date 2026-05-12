@@ -244,6 +244,7 @@ void scr_archery_game_handle(ak_msg_t* msg) {
 		task_post_pure_msg(AR_GAME_METEOROID_ID, 	AR_GAME_METEOROID_SETUP);
 		task_post_pure_msg(AR_GAME_BANG_ID, 	 	AR_GAME_BANG_SETUP);
 		task_post_pure_msg(AR_GAME_BORDER_ID, 	 	AR_GAME_BORDER_SETUP);
+		
 		// Setup timer
 		timer_set(	AC_TASK_DISPLAY_ID, \
 					AR_GAME_TIME_TICK, \

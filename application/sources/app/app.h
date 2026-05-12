@@ -158,7 +158,7 @@ enum {
 /*****************************************************************************/
 /* define timer */
 #define AR_GAME_OVER_TEXT_ANIM_TICK_INTERVAL						(250)
-#define AR_GAME_TIME_TICK_INTERVAL									(70)
+#define AR_GAME_TIME_TICK_INTERVAL									(50)
 #define AR_GAME_TIME_EXIT_INTERVAL									(5000)
 /* define signal */
 enum {

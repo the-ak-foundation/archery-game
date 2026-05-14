@@ -317,6 +317,7 @@ void uart_boot_cmd_handshake_res(void* boot_obj) {
 
 	if (uart_boot_object->boot_cmd.cmd == UART_BOOT_CMD_HANDSHAKE_REQ) {
 		/* update boot info */
+		if (uart_boot_object->len < sizeof(firmware_boot_cmd_t)) { return; }
 		memcpy(&app_sys_boot.fw_app_cmd, (uart_boot_object->data), sizeof(firmware_boot_cmd_t));
 
 		/* respondse command */
@@ -339,6 +340,7 @@ void uart_boot_cmd_update_res(void* boot_obj) {
 
 	if (uart_boot_object->boot_cmd.cmd == UART_BOOT_CMD_UPDATE_REQ) {
 		/* update host firmware header */
+		if (uart_boot_object->len < sizeof(firmware_header_t)) { return; }
 		memcpy(&app_sys_boot.update_fw_app_header, uart_boot_object->data, sizeof(firmware_header_t));
 
 		/* prepare repondse command */

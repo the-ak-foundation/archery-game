@@ -58,9 +58,6 @@ void scr_charts_game_handle(ak_msg_t* msg) {
 	switch (msg->sig) {
 	case SCREEN_ENTRY: {
 		APP_DBG_SIG("SCREEN_ENTRY\n");
-		view_render.initialize();
-		view_render_display_on();
-		
 		// Read score 
 		ar_game_score_read(&gamescore_charts);
 	}

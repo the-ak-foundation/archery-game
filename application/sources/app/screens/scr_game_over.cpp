@@ -52,10 +52,6 @@ void scr_game_over_handle(ak_msg_t* msg) {
 	switch (msg->sig) {
 	case SCREEN_ENTRY: {
 		APP_DBG_SIG("SCREEN_ENTRY\n");
-		// View render
-		view_render.initialize();
-		view_render_display_on();
-
 		// Timer show idle screen
 		timer_set(	AC_TASK_DISPLAY_ID, \
 					AC_DISPLAY_SHOW_IDLE, \
